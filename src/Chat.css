@@ -1,0 +1,39 @@
+.chat {
+    flex: 0.7;
+    /*Extends the grey line below header horizontally to 100%*/
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding-bottom: 150px;
+}
+
+.chat__header {
+    display: flex;
+    /*Makes the next level children to come in same horizontal line*/
+    align-items: center;
+    /*Makes a space between the two children of chat__header class*/
+    justify-content: space-between;
+    padding: 20px;
+    border-bottom: 1px solid lightgray;
+}
+
+.chat__headerRight > p {
+    display: flex;
+    /*Makes the next level children to come in same horizontal line*/
+    align-items: center;
+    font-size: 14px;
+}
+
+.chat__headerRight > p > .MuiSvgIcon-root {
+    margin-right: 5px !important;
+    font-size: 16px;
+}
+
+.chat__channelName {
+    display: flex;
+    text-transform: lowercase;
+}
+
+.chat__channelName > .MuiSvgIcon-root {
+    margin-left: 10px;
+    font-size: 18px;
+}
