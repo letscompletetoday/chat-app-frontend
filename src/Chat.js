@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './Chat.css'
 import {useParams} from 'react-router-dom'
 import Message from "./Message";
@@ -11,6 +11,14 @@ function Chat(props) {
     const {roomId} = useParams();
     const [roomDetails, setRoomDetails] = useState(null)
     const [channelMessages, setchannelMessages] = useState([]);
+
+    const messagesEndRef = useRef(null)
+
+    const scrollToBottom = () => {
+        messagesEndRef.current.scrollIntoView()
+    }
+
+    useEffect(() => {scrollToBottom()}, [channelMessages]);
 
     useEffect(() => {
         async function fetchChannelMessages() {
@@ -48,6 +56,7 @@ function Chat(props) {
                         userImage={profileImage}
                     />
                 ))}
+                <div ref={messagesEndRef} />
             </div>
 
             <ChatInput channelName={roomDetails?.name} channelId={roomId}/>
