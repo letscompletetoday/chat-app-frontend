@@ -1,24 +1,22 @@
-import React, { useState } from "react";
-import db from "./firebase";
+import React, {useState} from "react";
 import "./ChatInput.css";
-import { useStateValue } from "./StateProvider";
-import firebase from "firebase";
+import {useStateValue} from "./StateProvider";
+import socket from './socket'
 
-function ChatInput({ channelName, channelId }) {
+
+function ChatInput({channelName, channelId}) {
     const [input, setInput] = useState("");
-    const [{ user }] = useStateValue();
+    const [{user}] = useStateValue();
 
     const sendMessage = (e) => {
         e.preventDefault();
 
         if (channelId) {
-            //Post the message to db
-            //.add is the save/post to db
-            db.collection("rooms").doc(channelId).collection("messages").add({
-                message: input,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(), //Timestamp should always be server timestamp, so that wherever the geographical location is, it will be consistent
-                user: user.displayName,
-                userImage: user.photoURL,
+            socket.emit('message', {
+                'message': input,
+                'senderName': user.displayName,
+                'channelId': channelId,
+                'profileImage': user.photoURL
             });
         }
 

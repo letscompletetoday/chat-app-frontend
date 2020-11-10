@@ -1,39 +1,33 @@
 import React, {useEffect, useState} from 'react';
 import './Chat.css'
 import {useParams} from 'react-router-dom'
-import StarBorderOutlinedIcon from "@material-ui/icons/StarBorderOutlined";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
-import db from "./firebase"
 import Message from "./Message";
 import ChatInput from "./ChatInput";
-
+import requests from "./requests";
+import axios from "./axios";
+import socket from './socket'
 
 function Chat(props) {
     const {roomId} = useParams();
     const [roomDetails, setRoomDetails] = useState(null)
-    const [roomMessages, setRoomMessages] = useState([]);
+    const [channelMessages, setchannelMessages] = useState([]);
 
-    //snapshot.data() skips the funky auto id of the document
     useEffect(() => {
-        if (roomId) {
-            //.onSnapshot is listening to db changes
-            //Gets room details
-            db.collection("rooms")
-                .doc(roomId)
-                .onSnapshot((snapshot) => setRoomDetails(snapshot.data()));
-
-            //Gets messages
-            db.collection("rooms")
-                .doc(roomId)
-                .collection("messages")
-                .orderBy("timestamp", "asc")
-                .onSnapshot((snapshot) =>
-                    setRoomMessages(snapshot.docs.map((doc) => doc.data()))
-                );
+        async function fetchChannelMessages() {
+            const messages = await axios.get(requests.fetchMessagesOfRoom + roomId)
+            setchannelMessages(messages.data);
+            return messages
         }
 
-
+        fetchChannelMessages();
     }, [roomId])
+
+    useEffect(() => {
+        socket.on('message', (newMessage) => {
+            console.log('RECEIVED');
+            setchannelMessages([...channelMessages, newMessage])
+        })
+    }, [channelMessages])
 
     return (
         <div className="chat">
@@ -41,29 +35,22 @@ function Chat(props) {
                 <div className="chat__headerLeft">
                     <h4 className="chat__channelName">
                         <strong>#{roomDetails?.name}</strong>
-                        <StarBorderOutlinedIcon />
                     </h4>
                 </div>
-                <div className="chat__headerRight">
-                    <p>
-                        <InfoOutlinedIcon/> Details
-                    </p>
-                </div>
-
             </div>
 
             <div className="chat__messages">
-                {roomMessages.map(({ message, timestamp, user, userImage }) => (
+                {channelMessages.map(({message, timestamp, senderName, profileImage}) => (
                     <Message
                         message={message}
                         timestamp={timestamp}
-                        user={user}
-                        userImage={userImage}
+                        senderName={senderName}
+                        userImage={profileImage}
                     />
                 ))}
             </div>
 
-            <ChatInput channelName={roomDetails?.name} channelId={roomId} />
+            <ChatInput channelName={roomDetails?.name} channelId={roomId}/>
 
         </div>
     );
