@@ -6,11 +6,14 @@ import ChatInput from "./ChatInput";
 import requests from "./requests";
 import axios from "./axios";
 import socket from './socket'
+import {useStateValue} from "./StateProvider";
 
 function Chat(props) {
     const {roomId} = useParams();
     const [roomDetails, setRoomDetails] = useState(null)
     const [channelMessages, setchannelMessages] = useState([]);
+    const [isNotificationEnabled, setNotification] = useState(false)
+    const [{user}, dispatch] = useStateValue();
 
     const messagesEndRef = useRef(null)
 
@@ -27,12 +30,25 @@ function Chat(props) {
             return messages
         }
 
+        if (Notification.permission === 'granted') {
+            setNotification(true);
+        }
+
         fetchChannelMessages();
     }, [roomId])
 
     useEffect(() => {
         socket.on('message', (newMessage) => {
             console.log('RECEIVED');
+            console.log(newMessage?.senderName);
+            console.log(user.displayName);
+
+            if (isNotificationEnabled && newMessage?.senderName !== user?.displayName) {
+                console.log("Tried notifying");
+                new Notification(newMessage?.senderName, {
+                    body: newMessage?.message,
+                })
+            }
             setchannelMessages([...channelMessages, newMessage])
         })
     }, [channelMessages])

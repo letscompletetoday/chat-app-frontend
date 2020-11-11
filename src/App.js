@@ -7,10 +7,12 @@ import Login from "./Login";
 import {useStateValue} from "./StateProvider";
 import {actionTypes} from "./reducer";
 
-
 function App() {
 
     const checkIfNewUser = (user) => {
+        if (Notification.permission !== 'granted') {
+            Notification.requestPermission();
+        }
         if (!user) {
             //First see if user is in local storage
             if (localStorage.getItem('user')) {  //if present in local storage
@@ -48,7 +50,7 @@ function App() {
                                     <Chat/>
                                 </Route>
                                 <Route path="/">
-                                    <h1>Click on a channel to view/start the conversation</h1>
+                                    <h1 className="default__message">Click on a channel to view/start the conversation</h1>
                                 </Route>
                             </Switch>
                         </div>
