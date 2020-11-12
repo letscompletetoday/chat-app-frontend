@@ -18,12 +18,27 @@ function Chat(props) {
         messagesEndRef.current.scrollIntoView()
     }
 
+    useEffect(() => {
+        socket.onopen = function(event) {
+            console.log('WebSocket is connected.');
+
+            const msg = {
+                command: 'subscribe',
+                identifier: JSON.stringify({
+                    channel: 'MessageChannel'
+                }),
+            };
+
+            socket.send(JSON.stringify(msg));
+        };
+    }, []);
+
     useEffect(() => {scrollToBottom()}, [channelMessages]);
 
     useEffect(() => {
         async function fetchChannelMessages() {
             const messages = await axios.get(requests.fetchMessagesOfRoom + roomId)
-            setchannelMessages(messages.data);
+            setchannelMessages(messages.data.messages);
             return messages
         }
 
@@ -31,10 +46,16 @@ function Chat(props) {
     }, [roomId])
 
     useEffect(() => {
-        socket.on('message', (newMessage) => {
-            console.log('RECEIVED');
-            setchannelMessages([...channelMessages, newMessage])
-        })
+        // socket.on('message', (newMessage) => {
+        //     console.log('RECEIVED');
+        //     setchannelMessages([...channelMessages, newMessage])
+        // })
+        socket.onmessage =  function(e) {
+
+            if (e.data.type !== 'ping' && JSON.parse(e.data).message != null) {
+                setchannelMessages([...channelMessages, JSON.parse(e.data).message.message]);
+            }
+        }
     }, [channelMessages])
 
     return (
@@ -48,12 +69,12 @@ function Chat(props) {
             </div>
 
             <div className="chat__messages">
-                {channelMessages.map(({message, timestamp, senderName, profileImage}) => (
+                {channelMessages.map(({message, created_at, sender_name, profile_image}) => (
                     <Message
                         message={message}
-                        timestamp={timestamp}
-                        senderName={senderName}
-                        userImage={profileImage}
+                        timestamp={created_at}
+                        senderName={sender_name}
+                        userImage={profile_image}
                     />
                 ))}
                 <div ref={messagesEndRef} />

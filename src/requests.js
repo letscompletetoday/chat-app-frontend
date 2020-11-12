@@ -1,6 +1,6 @@
 const requests = {
-    fetchChannels: '/channels/all',
-    fetchMessagesOfRoom: '/getMessages/'
-}
+    fetchChannels: '/channels/',
+    fetchMessagesOfRoom: '/channels/'
+};
 
 export default requests;

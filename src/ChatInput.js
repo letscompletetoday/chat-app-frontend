@@ -10,14 +10,28 @@ function ChatInput({channelName, channelId}) {
 
     const sendMessage = (e) => {
         e.preventDefault();
-
+        console.log("OUT");
         if (channelId) {
-            socket.emit('message', {
-                'message': input,
-                'senderName': user.displayName,
-                'channelId': channelId,
-                'profileImage': user.photoURL
-            });
+            console.log("IN")
+            var msg = {
+                command: 'message',
+                identifier: JSON.stringify({
+                    channel: 'MessageChannel',
+                }),
+                data:JSON.stringify({
+                    message: input,
+                    action: 'send_message'
+                }),
+            };
+            // socket.emit('message', {
+            //     'message': input,
+            //     'senderName': user.displayName,
+            //     'channelId': channelId,
+            //     'profileImage': user.photoURL
+            // });
+            socket.send(
+                JSON.stringify(msg));
+            console.log("SOcket: " + socket);
         }
 
         setInput("");

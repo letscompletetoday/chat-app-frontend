@@ -36,7 +36,7 @@ function SideBar(props) {
             </div>
 
             {channels.map((channel) => (
-                <SidebarOption title={channel.name} id={channel.id} />
+                <SidebarOption title={channel.title} id={channel._id.$oid} />
             ))}
 
         </div>
