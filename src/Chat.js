@@ -7,7 +7,7 @@ import requests from "./requests";
 import axios from "./axios";
 import socket from './socket'
 import {useStateValue} from "./StateProvider";
-const {ipcRenderer} = window.require('electron')
+const ipcRenderer = window.ipcRenderer
 
 function Chat(props) {
     const {roomId} = useParams();
@@ -36,13 +36,11 @@ function Chat(props) {
 
     useEffect(() => {
         socket.once('message', (newMessage) => {
-            console.log("OUTER")
             if (newMessage?.senderName !== user?.displayName) {
                 ipcRenderer.send('notify', {
                     title: user?.displayName,
                     message: "1 message"
                 })
-                console.log("INNER")
             }
             setchannelMessages([...channelMessages, newMessage])
         })

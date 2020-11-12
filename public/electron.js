@@ -2,7 +2,6 @@ const { app, BrowserWindow, session } = require('electron')
 const path = require("path")
 const isDev = require("electron-is-dev")
 const {ipcMain} = require('electron')
-const notifier = require('node-notifier')
 
 function createWindow () {
     const win = new BrowserWindow({
@@ -10,7 +9,8 @@ function createWindow () {
         height: 600,
         webPreferences: {
             nodeIntegration: true,
-            nativeWindowOpen: true
+            nativeWindowOpen: true,
+            preload: `${__dirname}/preload.js`
         }
     })
 
@@ -44,10 +44,7 @@ app.on('activate', () => {
 ipcMain.on('notify', (event, arg) => {
     console.log(event)
     console.log(JSON.stringify(arg))
-    notifier.notify({
-        title: arg.title,
-        message: arg.message
-    })
+    app.dock.setBadge('.')
 })
 
 // Fix insecure error when log in google account
