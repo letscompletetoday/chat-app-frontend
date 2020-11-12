@@ -7,12 +7,12 @@ import requests from "./requests";
 import axios from "./axios";
 import socket from './socket'
 import {useStateValue} from "./StateProvider";
+const {ipcRenderer} = window.require('electron')
 
 function Chat(props) {
     const {roomId} = useParams();
     const [roomDetails, setRoomDetails] = useState(null)
     const [channelMessages, setchannelMessages] = useState([]);
-    const [isNotificationEnabled, setNotification] = useState(false)
     const [{user}, dispatch] = useStateValue();
 
     const messagesEndRef = useRef(null)
@@ -30,20 +30,19 @@ function Chat(props) {
             return messages
         }
 
-        if (Notification.permission === 'granted') {
-            setNotification(true);
-        }
 
         fetchChannelMessages();
     }, [roomId])
 
     useEffect(() => {
         socket.on('message', (newMessage) => {
-
-            if (isNotificationEnabled && newMessage?.senderName !== user?.displayName) {
-                new Notification(newMessage?.senderName, {
-                    body: newMessage?.message,
+            console.log("OUTER")
+            if (newMessage?.senderName !== user?.displayName) {
+                ipcRenderer.send('notify', {
+                    title: 'ASDF',
+                    message: 'ASDF'
                 })
+                console.log("INNER")
             }
             setchannelMessages([...channelMessages, newMessage])
         })

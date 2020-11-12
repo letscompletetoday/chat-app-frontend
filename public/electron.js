@@ -1,6 +1,8 @@
 const { app, BrowserWindow, session } = require('electron')
 const path = require("path")
 const isDev = require("electron-is-dev")
+const {ipcMain} = require('electron')
+const notifier = require('node-notifier')
 
 function createWindow () {
     const win = new BrowserWindow({
@@ -15,6 +17,8 @@ function createWindow () {
     win.loadURL(isDev ?
         'http://localhost:3000/' :
         `http://ec2-13-127-158-77.ap-south-1.compute.amazonaws.com:5000/`);
+
+    win.webContents.openDevTools()
 }
 
 app.whenReady().then(() => {
@@ -35,6 +39,15 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
     }
+})
+
+ipcMain.on('notify', (event, arg) => {
+    console.log(event)
+    console.log(JSON.stringify(arg))
+    notifier.notify({
+        title: 'ASDF',
+        message: 'ASDF'
+    })
 })
 
 // Fix insecure error when log in google account

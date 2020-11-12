@@ -10,9 +10,6 @@ import {actionTypes} from "./reducer";
 function App() {
 
     const checkIfNewUser = (user) => {
-        if (Notification.permission !== 'granted') {
-            Notification.requestPermission();
-        }
         if (!user) {
             //First see if user is in local storage
             if (localStorage.getItem('user')) {  //if present in local storage
