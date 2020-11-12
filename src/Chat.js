@@ -31,7 +31,7 @@ function Chat(props) {
     }, [roomId])
 
     useEffect(() => {
-        socket.on('message', (newMessage) => {
+        socket.once('message', (newMessage) => {
             console.log('RECEIVED');
             setchannelMessages([...channelMessages, newMessage])
         })
