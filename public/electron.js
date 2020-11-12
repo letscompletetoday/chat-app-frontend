@@ -45,8 +45,8 @@ ipcMain.on('notify', (event, arg) => {
     console.log(event)
     console.log(JSON.stringify(arg))
     notifier.notify({
-        title: 'ASDF',
-        message: 'ASDF'
+        title: arg.title,
+        message: arg.message
     })
 })
 

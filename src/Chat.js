@@ -35,12 +35,12 @@ function Chat(props) {
     }, [roomId])
 
     useEffect(() => {
-        socket.on('message', (newMessage) => {
+        socket.once('message', (newMessage) => {
             console.log("OUTER")
             if (newMessage?.senderName !== user?.displayName) {
                 ipcRenderer.send('notify', {
-                    title: 'ASDF',
-                    message: 'ASDF'
+                    title: user?.displayName,
+                    message: "1 message"
                 })
                 console.log("INNER")
             }
