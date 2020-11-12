@@ -14,9 +14,7 @@ function createWindow () {
 
     win.loadURL(isDev ?
         'http://localhost:3000/' :
-        `file://${path.join(__dirname, '../build/index.html')}`);
-
-    win.webContents.openDevTools();
+        `http://ec2-13-127-158-77.ap-south-1.compute.amazonaws.com:5000/`);
 }
 
 app.whenReady().then(() => {

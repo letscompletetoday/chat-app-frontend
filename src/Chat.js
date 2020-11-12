@@ -39,12 +39,8 @@ function Chat(props) {
 
     useEffect(() => {
         socket.on('message', (newMessage) => {
-            console.log('RECEIVED');
-            console.log(newMessage?.senderName);
-            console.log(user.displayName);
 
             if (isNotificationEnabled && newMessage?.senderName !== user?.displayName) {
-                console.log("Tried notifying");
                 new Notification(newMessage?.senderName, {
                     body: newMessage?.message,
                 })

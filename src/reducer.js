@@ -8,7 +8,6 @@ export const actionTypes = {
 };
 
 const reducer = (state, action) => {
-    console.log(action);
 
     // Listening to action type
     switch (action.type) {

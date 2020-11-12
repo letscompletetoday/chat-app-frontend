@@ -18,7 +18,6 @@ function Login() {
                     user: result.user,
                 });
                 localStorage.setItem('user', JSON.stringify(result.user))
-                console.log(result)
             })
             .catch((error) => {
                 alert(error.message);
