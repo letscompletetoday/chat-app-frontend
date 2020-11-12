@@ -9,3 +9,11 @@ body {
     /*Fills the side bar to bottom*/
     height: 100vh;
 }
+
+.default__message {
+    flex: 0.7;
+    /*Extends the grey line below header horizontally to 100%*/
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding-bottom: 150px;
+}

@@ -48,7 +48,7 @@ function App() {
                                     <Chat/>
                                 </Route>
                                 <Route path="/">
-                                    <h1>Click on a channel to view/start the conversation</h1>
+                                    <h1 className="default__message">Click on a channel to view/start the conversation</h1>
                                 </Route>
                             </Switch>
                         </div>
