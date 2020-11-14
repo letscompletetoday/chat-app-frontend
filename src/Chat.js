@@ -25,6 +25,7 @@ function Chat(props) {
             const msg = {
                 command: 'subscribe',
                 identifier: JSON.stringify({
+                    id: roomId,
                     channel: 'MessageChannel'
                 }),
             };
@@ -51,9 +52,9 @@ function Chat(props) {
         //     setchannelMessages([...channelMessages, newMessage])
         // })
         socket.onmessage =  function(e) {
-
-            if (e.data.type !== 'ping' && JSON.parse(e.data).message != null) {
-                setchannelMessages([...channelMessages, JSON.parse(e.data).message.message]);
+            var data = JSON.parse(e.data)
+            if ((data.type !== 'ping' && data.type !== 'welcome' && data.type !== 'confirm_subscription') && data.message != null) {
+                setchannelMessages([...channelMessages, data.message]);
             }
         }
     }, [channelMessages])

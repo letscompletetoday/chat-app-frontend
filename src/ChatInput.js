@@ -16,10 +16,14 @@ function ChatInput({channelName, channelId}) {
             var msg = {
                 command: 'message',
                 identifier: JSON.stringify({
+                    id: channelId,
                     channel: 'MessageChannel',
                 }),
                 data:JSON.stringify({
-                    message: input,
+                    message: {  'message': input,
+                        'sender_name': user.displayName,
+                        'channel_id': channelId,
+                        'profile_image': user.photoURL},
                     action: 'send_message'
                 }),
             };
